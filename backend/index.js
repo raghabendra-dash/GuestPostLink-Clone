@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 5000;
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://backlinkvista.vercel.app"
+  "https://guest-post-link-clone-front.vercel.app/"
 ];
 
 // Middleware
