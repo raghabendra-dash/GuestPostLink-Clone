@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useCallback, useEffect } fr
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../store/userStore";
 import { endpoints } from "../utils/api";
+import { toast } from "react-hot-toast";
 
 const AuthContext = createContext();
 
@@ -73,8 +74,8 @@ const login = useCallback(async (email, password) => {
     navigate("/"); 
     
     return { success: true };
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    toast.error(error.message || "User doesn't exist!");
   } finally {
     setLoading(false);
   }
