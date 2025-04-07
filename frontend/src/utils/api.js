@@ -17,24 +17,30 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    console.log("API Request:", {
+      method: config.method,
+      url: config.url,
+      data: config.data,
+      headers: config.headers,
+    });
+
     return config;
   },
-  (error) => {
-    const requestError = new Error(`Request failed: ${error.message}`);
-    requestError.isRequestError = true;
-    return Promise.reject(requestError);
-  }
+  (error) => Promise.reject(error)
 );
 
+
 api.interceptors.response.use(
-  (response) => {
+  (response) =>{ 
+    console.log("API Response:", response); 
     return response.data;
   },
-  (error) => {
+  async (error) => {
     if (!error.response) {
-      const networkError = new Error("Network error - please check your connection");
-      networkError.isNetworkError = true;
-      return Promise.reject(networkError);
+      return Promise.reject({
+        message: "Network error - please check your connection",
+        isNetworkError: true,
+      });
     }
 
     if (error.response.status === 401) {
@@ -42,12 +48,11 @@ api.interceptors.response.use(
       window.location.href = "/login";
     }
 
-    const serverError = new Error(
-      error.response.data?.message || "Request failed"
-    );
-    serverError.status = error.response.status;
-    serverError.data = error.response.data;
-    return Promise.reject(serverError);
+    return Promise.reject({
+      message: error.response.data?.message || "Request failed",
+      status: error.response.status,
+      data: error.response.data,
+    });
   }
 );
 
@@ -58,17 +63,20 @@ export const endpoints = {
     logout: () => api.post("/api/auth/logout"),
     refreshToken: (data) => api.post("/api/auth/refresh", data),
   },
+
   cart: {
-    getCart: (userId) => api.get(`/api/cart/${userId}`),
-    addToCart: (userId, websiteId) => api.post(`/api/cart/${userId}/items`, { websiteId }),
-    removeFromCart: (userId, websiteId) => api.delete(`/api/cart/${userId}/items/${websiteId}`),
-    clearCart: (userId) => api.delete(`/api/cart/${userId}`),
+    getCart: (userId) => api.get(`/api/cart/${userId}`),  
+    addToCart: (userId, websiteId) => api.post(`/api/cart/${userId}/items`, { websiteId }),  
+    removeFromCart: (userId, websiteId) => api.delete(`/api/cart/${userId}/items/${websiteId}`), 
+    clearCart: (userId) => api.delete(`/api/cart/${userId}`),                     
   },
+
   marketplace: {
     getWebsites: (params) => api.get("/api/marketplace/websites", { params }),
     getWebsite: (id) => api.get(`/api/marketplace/websites/${id}`),
     checkout: (data) => api.post("/api/marketplace/checkout", data),
   },
+  
   orders: {
     createOrder: (data) => api.post("/api/orders", data),
     getOrders: (userId) => api.get(`/api/orders/user/${userId}`),
