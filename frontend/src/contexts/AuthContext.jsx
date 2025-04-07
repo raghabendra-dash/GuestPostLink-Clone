@@ -28,27 +28,24 @@ export const AuthProvider = ({ children }) => {
     }
   }, [setUser]);
 
-  const clearAuthData = () => {
+  const clearAuthData = useCallback(() => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("isAuthenticated");
     localStorage.removeItem("refreshToken");
-  };
+  }, []);
 
-  const handleAuthResponse = (response) => {
+  const handleAuthResponse = useCallback((response) => {
     if (!response) {
-      throw {
-        message: "No response from server",
-        code: "NO_RESPONSE"
-      };
+      const error = new Error("No response from server");
+      error.code = "NO_RESPONSE";
+      throw error;
     }
 
     if (!response.success || !response.user || !response.token) {
-      throw {
-        message: response.message || "Authentication failed",
-        code: response.code || "AUTH_FAILED",
-        status: response.status
-      };
+      const error = new Error(response.message || "Authentication failed");
+      error.code = response.code || "AUTH_FAILED";
+      throw error;
     }
 
     localStorage.setItem("token", response.token);
@@ -61,51 +58,44 @@ export const AuthProvider = ({ children }) => {
 
     setIsAuthenticated(true);
     setUser(response.user);
-    navigate("/");
-  };
+    navigate("/dashboard");
+  }, [navigate, setUser]);
 
   const login = useCallback(async (email, password) => {
     try {
       setLoading(true);
       setError(null);
-      
       const response = await endpoints.auth.login({ email, password });
       handleAuthResponse(response);
     } catch (err) {
-      console.error("Login error:", err);
-      setError({
-        message: err.message || "Login failed",
-        code: err.code || "UNKNOWN_ERROR",
-        isNetworkError: err.isNetworkError
-      });
+      const error = new Error(err.message || "Login failed");
+      error.code = err.code || "LOGIN_FAILED";
+      setError(error);
       setIsAuthenticated(false);
       setUser(null);
       clearAuthData();
     } finally {
       setLoading(false);
     }
-  }, [navigate, setUser]);
+  }, [handleAuthResponse, clearAuthData, setUser]);
 
   const register = useCallback(async (name, email, phone, password) => {
     try {
       setLoading(true);
       setError(null);
-      
       const response = await endpoints.auth.register({ name, email, phone, password });
       handleAuthResponse(response);
     } catch (err) {
-      console.error("Registration error:", err);
-      setError({
-        message: err.message || "Registration failed",
-        code: err.code || "REGISTRATION_FAILED"
-      });
+      const error = new Error(err.message || "Registration failed");
+      error.code = err.code || "REGISTRATION_FAILED";
+      setError(error);
       setIsAuthenticated(false);
       setUser(null);
       clearAuthData();
     } finally {
       setLoading(false);
     }
-  }, [navigate, setUser]);
+  }, [handleAuthResponse, clearAuthData, setUser]);
 
   const logout = useCallback(async () => {
     try {
@@ -118,7 +108,7 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       navigate("/login");
     }
-  }, [navigate, setUser]);
+  }, [clearAuthData, navigate, setUser]);
 
   return (
     <AuthContext.Provider value={{ 
