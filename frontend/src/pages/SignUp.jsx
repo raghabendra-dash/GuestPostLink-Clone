@@ -53,7 +53,7 @@ const SignUp = () => {
               className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-600 flex items-center gap-2"
             >
               <AlertCircle className="h-5 w-5" />
-              <span>{localError || error?.message}</span>
+              <span>{localError || error}</span>
             </motion.div>
           )}
 
