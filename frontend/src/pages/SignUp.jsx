@@ -53,7 +53,7 @@ const SignUp = () => {
               className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-600 flex items-center gap-2"
             >
               <AlertCircle className="h-5 w-5" />
-              <span>{localError || error}</span>
+              <span>{localError || error?.message}</span>
             </motion.div>
           )}
 
@@ -135,10 +135,7 @@ const SignUp = () => {
             </div>
 
             <div>
-              <label
-                className="block text-gray-700 mb-2"
-                htmlFor="confirmPassword"
-              >
+              <label className="block text-gray-700 mb-2" htmlFor="confirmPassword">
                 Confirm Password
               </label>
               <div className="relative">
