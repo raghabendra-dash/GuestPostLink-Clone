@@ -114,8 +114,6 @@ const mockWebsites = [
   },
 ];
 
-
-
 const Marketplace = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [websites] = useState(mockWebsites);
@@ -201,11 +199,13 @@ const Marketplace = () => {
           </a>
         </div>
         <button
-          onClick={() => addToCart(website.id, website)}
-          className="bg-blue-600 hover:bg-emerald-500 text-white p-2 rounded-full"
-          aria-label="Add to cart"
+          onClick={() => {
+          console.log("Item passed to cart:", website); 
+          addToCart(website); 
+         }}
+         className="bg-blue-600 hover:bg-emerald-500 text-white p-2 rounded-full"
         >
-          <ShoppingCart className="h-4 w-4" />
+         <ShoppingCart className="h-4 w-4" />
         </button>
       </div>
     </motion.div>
