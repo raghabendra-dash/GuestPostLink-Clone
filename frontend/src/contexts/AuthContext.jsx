@@ -37,9 +37,7 @@ export const AuthProvider = ({ children }) => {
 
   const handleAuthResponse = useCallback((response) => {
     if (!response) {
-      const error = new Error("No response from server");
-      error.code = "NO_RESPONSE";
-      throw error;
+      throw new Error("No response from server");
     }
 
     if (!response.success || !response.user || !response.token) {
@@ -70,7 +68,7 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       const error = new Error(err.message || "Login failed");
       error.code = err.code || "LOGIN_FAILED";
-      setError(error);
+      setError(error.message); // Store only the message string
       setIsAuthenticated(false);
       setUser(null);
       clearAuthData();
@@ -88,7 +86,7 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       const error = new Error(err.message || "Registration failed");
       error.code = err.code || "REGISTRATION_FAILED";
-      setError(error);
+      setError(error.message); // Store only the message string
       setIsAuthenticated(false);
       setUser(null);
       clearAuthData();
