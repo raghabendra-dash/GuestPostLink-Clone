@@ -73,7 +73,6 @@ export const registerUser = async (req, res) => {
   }
 };
 
-// User Login
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -85,7 +84,6 @@ export const loginUser = async (req, res) => {
       });
     }
 
-    // Admin login (consider moving to separate admin controller)
     if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
       const token = jwt.sign(
         { userId: "admin123", role: "admin" }, 
