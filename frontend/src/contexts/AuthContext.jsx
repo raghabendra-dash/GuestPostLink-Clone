@@ -59,41 +59,47 @@ export const AuthProvider = ({ children }) => {
     navigate("/dashboard");
   }, [navigate, setUser]);
 
-  const login = useCallback(async (email, password) => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await endpoints.auth.login({ email, password });
-      handleAuthResponse(response);
-    } catch (err) {
-      const error = new Error(err.message || "Login failed");
-      error.code = err.code || "LOGIN_FAILED";
-      setError(error.message); // Store only the message string
-      setIsAuthenticated(false);
-      setUser(null);
-      clearAuthData();
-    } finally {
-      setLoading(false);
-    }
-  }, [handleAuthResponse, clearAuthData, setUser]);
+const login = useCallback(async (email, password) => {
+  try {
+    setLoading(true);
+    setError(null);
+    const response = await endpoints.auth.login({ email, password });
+    
+    localStorage.setItem("token", response.token);
+    localStorage.setItem("user", JSON.stringify(response.user));
+    setIsAuthenticated(true);
+    setUser(response.user);
 
-  const register = useCallback(async (name, email, phone, password) => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await endpoints.auth.register({ name, email, phone, password });
-      handleAuthResponse(response);
-    } catch (err) {
-      const error = new Error(err.message || "Registration failed");
-      error.code = err.code || "REGISTRATION_FAILED";
-      setError(error.message); // Store only the message string
-      setIsAuthenticated(false);
-      setUser(null);
-      clearAuthData();
-    } finally {
-      setLoading(false);
-    }
-  }, [handleAuthResponse, clearAuthData, setUser]);
+    navigate("/marketplace"); 
+    
+    return { success: true };
+  } catch (err) {
+    console.log(err);
+  } finally {
+    setLoading(false);
+  }
+}, [navigate, setUser]);
+
+const register = useCallback(async (name, email, phone, password) => {
+  try {
+    setLoading(true);
+    setError(null);
+    const response = await endpoints.auth.register({ name, email, phone, password });
+    
+    localStorage.setItem("token", response.token);
+    localStorage.setItem("user", JSON.stringify(response.user));
+    setIsAuthenticated(true);
+    setUser(response.user);
+    
+    navigate("/marketplace"); 
+    
+    return { success: true };
+  } catch (err) {
+    console.log(err);
+  } finally {
+    setLoading(false);
+  }
+}, [navigate, setUser]);
 
   const logout = useCallback(async () => {
     try {
@@ -127,7 +133,7 @@ export const AuthProvider = ({ children }) => {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error("useAuth must be used");
   }
   return context;
 };
