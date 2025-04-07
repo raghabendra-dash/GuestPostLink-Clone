@@ -76,9 +76,8 @@ const login = useCallback(async (email, password) => {
     return { success: true };
   } catch (error) {
     console.log(error);
-    toast.error("User doesn't exist!");
   } finally {
-    setLoading(false);
+    setLoading(true);
   }
 }, [navigate, setUser]);
 
