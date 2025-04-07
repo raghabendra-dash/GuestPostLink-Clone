@@ -12,13 +12,15 @@ const Login = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate(-1);
+      navigate("/dashboard");
     }
   }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email || !password) return;
+    if (!email || !password) {
+      return;
+    }
     await login(email, password);
   };
 
@@ -44,7 +46,7 @@ const Login = () => {
               className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-600 flex items-center gap-2"
             >
               <AlertCircle className="h-5 w-5" />
-              <span>{error}</span>
+              <span>{error.message}</span>
             </motion.div>
           )}
 
