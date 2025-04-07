@@ -70,7 +70,7 @@ const login = useCallback(async (email, password) => {
     setIsAuthenticated(true);
     setUser(response.user);
 
-    navigate("/marketplace"); 
+    navigate("/"); 
     
     return { success: true };
   } catch (err) {
@@ -91,7 +91,7 @@ const register = useCallback(async (name, email, phone, password) => {
     setIsAuthenticated(true);
     setUser(response.user);
     
-    navigate("/marketplace"); 
+    navigate("/"); 
     
     return { success: true };
   } catch (err) {
