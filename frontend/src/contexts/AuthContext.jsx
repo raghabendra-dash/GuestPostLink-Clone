@@ -2,7 +2,6 @@ import React, { createContext, useContext, useState, useCallback, useEffect } fr
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../store/userStore";
 import { endpoints } from "../utils/api";
-import { toast } from "react-hot-toast";
 
 const AuthContext = createContext();
 
@@ -74,10 +73,10 @@ const login = useCallback(async (email, password) => {
     navigate("/"); 
     
     return { success: true };
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
   } finally {
-    setLoading(true);
+    setLoading(false);
   }
 }, [navigate, setUser]);
 
