@@ -16,22 +16,19 @@ const ShoppingCart = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const transformedItems = cartItems.map(item => {
-      if (!item._id && !item.id) {
-        console.warn("Cart item missing identifier:", item);
-        return null;
-      }
-      return {
-        _id: item._id || item.id.toString(), 
-        id: item.id, 
-        price: item.price || 0,
-        domain: item.domain || "Unknown Domain",
-        title: item.title || "Guest Post",
-        category: item.category || "General",
-        country: item.country || "International",
-        description: item.description || "",
-      };
-    }).filter(Boolean); 
+    const transformedItems = cartItems
+    .filter(item => item && (item._id || item.id))
+    .map(item => ({
+      _id: item._id || item.id,
+      id: item.id,
+      price: item.price || 0,
+      domain: item.domain || "Unknown Domain",
+      title: item.title || item.domain || "Guest Post",
+      category: item.category || "General",
+      country: item.country || "International",
+      description: item.description || "",
+    }));
+  
   
     setFormattedItems(transformedItems);
   }, [cartItems]);
