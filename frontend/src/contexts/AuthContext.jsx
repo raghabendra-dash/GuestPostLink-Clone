@@ -75,7 +75,8 @@ const login = useCallback(async (email, password) => {
     
     return { success: true };
   } catch (error) {
-    toast.error(error.message || "User doesn't exist!");
+    console.log(error);
+    toast.error("User doesn't exist!");
   } finally {
     setLoading(false);
   }
