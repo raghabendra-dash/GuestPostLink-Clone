@@ -6,7 +6,7 @@ import { toast } from "react-hot-toast";
 const CartContext = createContext();
 
 const transformCartItem = (item) => ({
-  _id: (item._id || item.id || Math.random().toString(36).toString()),
+  _id: item._id || item.id,
   id: item.id,
   price: item.price || 0,
   domain: item.domain || "Unknown Domain",
@@ -15,6 +15,7 @@ const transformCartItem = (item) => ({
   country: item.country || "International",
   description: item.description || "",
 });
+
 
 export const CartProvider = ({ children }) => {
   const { user } = useAuth();
@@ -28,6 +29,7 @@ export const CartProvider = ({ children }) => {
   const persistCart = useCallback((items) => {
     localStorage.setItem('cart', JSON.stringify(items));
   }, []);
+
 
   const fetchCart = useCallback(async () => {
     if (!user?._id) return;
@@ -49,32 +51,30 @@ export const CartProvider = ({ children }) => {
     }
   }, [user, persistCart]);
 
-  const addToCart = useCallback(async (websiteId, websiteData) => {
-    if (!user?._id) {
-      toast.error("Please login to add items");
-      return false;
+  const addToCart = async (item) => {
+    const itemId = item._id || item.id;
+    console.log("Sending to server:", { userId: user._id, itemId });
+    const exists = cartItems.some(i => (i._id || i.id) === itemId);
+  
+    if (exists) {
+      toast("Item already in cart");
+      return;
     }
-
-    const newItem = transformCartItem(websiteData);
-    setCartItems(prev => {
-      const updated = [...prev, newItem];
-      persistCart(updated);
-      return updated;
-    });
-
+  
+    const updatedCart = [...cartItems, { ...item, quantity: 1 }];
+    setCartItems(updatedCart);
+    persistCart(updatedCart);
+    toast.success("Item added to cart");
+  
     try {
-      await endpoints.cart.addToCart(user._id, newItem._id, newItem);
-      return true;
+      const res = await endpoints.cart.addToCart(user._id, itemId);
+      if (!res.success) {
+        throw new Error(res.message || "Failed on server");
+      }
     } catch (error) {
-      setCartItems(prev => {
-        const updated = prev.filter(i => i._id !== newItem._id);
-        persistCart(updated);
-        return updated;
-      });
-      toast.error(error.message || "Failed to add");
-      return false;
+      console.error("Server cart add failed:", error.message);
     }
-  }, [user, persistCart]);
+  };
 
   const removeFromCart = useCallback(async (websiteId) => {
     const idToRemove = websiteId.toString();
@@ -109,6 +109,8 @@ export const CartProvider = ({ children }) => {
     fetchCart();
   }, [fetchCart]);
 
+  const cartCount = cartItems.reduce((total, item) => total + (item.quantity || 1), 0);
+
   return (
     <CartContext.Provider value={{
       cart,
@@ -117,6 +119,7 @@ export const CartProvider = ({ children }) => {
       addToCart,
       removeFromCart,
       clearCart,
+      cartCount,
       refreshCart: fetchCart
     }}>
       {children}
