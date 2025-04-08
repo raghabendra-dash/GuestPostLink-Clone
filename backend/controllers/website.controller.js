@@ -1,7 +1,6 @@
 import Website from "../models/website.model.js";
 import Cart from "../models/cart.model.js";
 
-// Create and Save a new Website
 export const create = async (req, res) => {
   try {
     const {
@@ -60,10 +59,8 @@ export const create = async (req, res) => {
   }
 };
 
-// fetch all websties with query parameters
 export const fetchAll = async (req, res) => {
   try {
-    // fetching query parameters
     const query = {};
     const { category, country, minPrice, maxPrice, keyword } = req.query;
 
@@ -92,7 +89,6 @@ export const fetchAll = async (req, res) => {
   }
 };
 
-// Fetch a single website by its ID
 export const getWebsite = async (req, res) => {
   try {
     const { id } = req.params;
@@ -110,12 +106,9 @@ export const getWebsite = async (req, res) => {
   }
 };
 
-// add to cart
 export const addToCart = async (req, res) => {
   try {
-    const { userId, websiteId } = req.body; // extract required fields from request body
-
-    // Check if the website exists
+    const { userId, websiteId } = req.body;
     const website = await Website.findById(websiteId);
     if (!website) {
       return res
@@ -123,17 +116,14 @@ export const addToCart = async (req, res) => {
         .json({ success: false, message: "Website not found" });
     }
 
-    // Find the user's cart or create a new one if it doesn't exist
     let cart = await Cart.findOne({ userId });
 
     if (!cart) {
-      // Create a new cart with the selected website
       cart = new Cart({
         userId,
         websites: [{ websiteId: website._id, price: website.price }],
       });
     } else {
-      // Check if the website is already in the cart
       const existingItem = cart.websites.find(
         (item) => item.websiteId.toString() === websiteId
       );
@@ -143,11 +133,9 @@ export const addToCart = async (req, res) => {
           .json({ success: false, message: "Website already in cart" });
       }
 
-      // Add the website to the cart
       cart.websites.push({ websiteId: website._id, price: website.price });
     }
 
-    // Save the updated cart
     await cart.save();
 
     res
@@ -162,13 +150,11 @@ export const addToCart = async (req, res) => {
   }
 };
 
-// remove from cart
 export const removeFromCart = async (req, res) => {
   try {
     const { websiteId } = req.params;
-    const { userId } = req.query; // Extract userId from query parameters
+    const { userId } = req.query; 
 
-    // Find the user's cart
     let cart = await Cart.findOne({ userId });
 
     if (!cart) {
@@ -177,7 +163,6 @@ export const removeFromCart = async (req, res) => {
         .json({ success: false, message: "Cart not found" });
     }
 
-    // Check if the website is in the cart
     const existingItem = cart.websites.find(
       (item) => item.websiteId.toString() === websiteId
     );
@@ -187,12 +172,10 @@ export const removeFromCart = async (req, res) => {
         .json({ success: false, message: "Website not in cart" });
     }
 
-    // Remove the website from the cart
     cart.websites = cart.websites.filter(
       (item) => item.websiteId.toString() !== websiteId
     );
 
-    // Save the updated cart
     await cart.save();
 
     res
