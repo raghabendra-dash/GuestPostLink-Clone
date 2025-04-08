@@ -7,10 +7,13 @@ createRoot(document.getElementById("root")).render(
   <>
     <App />
     <Toaster
-      position="bottom-right"
+      position="top-center"
       reverseOrder={false}
       toastOptions={{
-        duration: 3000,
+        duration: 5000,
+        style: {
+          marginTop: "60px",
+        },  
       }}
     />
   </>
