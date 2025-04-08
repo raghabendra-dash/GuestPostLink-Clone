@@ -33,6 +33,14 @@ router.post("/:userId/items", async (req, res) => {
   try {
     const { userId } = req.params;
     const { websiteId } = req.body;
+
+    if (!websiteId) {
+      return res.status(400).json({
+        success: false,
+        message: "websiteId is required"
+      });
+    }
+
     const websiteIdStr = websiteId.toString();
 
     let cart = await Cart.findOne({ userId });
@@ -65,6 +73,7 @@ router.post("/:userId/items", async (req, res) => {
     });
   }
 });
+
 
 router.delete("/:userId/items/:websiteId", async (req, res) => {
   try {
