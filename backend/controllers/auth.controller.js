@@ -28,7 +28,8 @@ export const registerUser = async (req, res) => {
     if (userExists) {
       return res.status(409).json({ 
         success: false,
-        message: "User already exists" 
+        message: "User already exists",
+        toastDuration: 4000,
       });
     }
 
@@ -110,6 +111,7 @@ export const loginUser = async (req, res) => {
       return res.status(401).json({ 
         success: false,
         message: "User not exist", 
+        toastDuration: 4000,
       });
     }
 
