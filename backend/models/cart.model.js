@@ -9,7 +9,7 @@ const cartSchema = new Schema({
   },
   items: [{
     websiteId: { 
-      type: Schema.Types.Mixed, // Accepts both String and ObjectId
+      type: Schema.Types.Mixed, 
       required: true 
     },
     addedAt: { 
