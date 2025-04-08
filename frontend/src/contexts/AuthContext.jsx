@@ -76,7 +76,7 @@ export const AuthProvider = ({ children }) => {
       
     } catch (error) {
       const errorMsg = error.response?.data?.message || error.message || "Login failed!";
-      toast.error(errorMsg, { duration: 4000 });
+      toast.error(errorMsg, { duration: 6000 });
     } finally {
       setLoading(false);
     }
