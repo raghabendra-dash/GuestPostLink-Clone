@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useCallback, useEffect } fr
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../store/userStore";
 import { endpoints } from "../utils/api";
+import { toast } from "react-hot-toast"; 
 
 const AuthContext = createContext();
 
@@ -59,47 +60,50 @@ export const AuthProvider = ({ children }) => {
     navigate("/dashboard");
   }, [navigate, setUser]);
 
-const login = useCallback(async (email, password) => {
-  try {
-    setLoading(true);
-    setError(null);
-    const response = await endpoints.auth.login({ email, password });
-    
-    localStorage.setItem("token", response.token);
-    localStorage.setItem("user", JSON.stringify(response.user));
-    setIsAuthenticated(true);
-    setUser(response.user);
+  const login = useCallback(async (email, password) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await endpoints.auth.login({ email, password });
+      
+      localStorage.setItem("token", response.token);
+      localStorage.setItem("user", JSON.stringify(response.user));
+      setIsAuthenticated(true);
+      setUser(response.user);
+  
+      toast.success('Login successful', { duration: 2000 });
+      navigate("/");
+      
+    } catch (error) {
+      const errorMsg = error.response?.data?.message || error.message || "Login failed!";
+      toast.error(errorMsg, { duration: 4000 });
+    } finally {
+      setLoading(false);
+    }
+  }, [navigate, setUser]);
+  
+  const register = useCallback(async (name, email, phone, password) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await endpoints.auth.register({ name, email, phone, password });
+  
+      localStorage.setItem("token", response.token);
+      localStorage.setItem("user", JSON.stringify(response.user));
+      setIsAuthenticated(true);
+      setUser(response.user);
+  
+      toast.success('Registration successful', { duration: 2000 });
+      navigate("/");
+      
+    } catch (error) {
+      const errorMsg = error?.message || "Registration failed!";
+      toast.error(errorMsg, { duration: 4000 });
+    } finally {
+      setLoading(false);
+    }
+  }, [navigate, setUser]);
 
-    navigate("/"); 
-    
-    return { success: true };
-  } catch (err) {
-    console.log(err);
-  } finally {
-    setLoading(false);
-  }
-}, [navigate, setUser]);
-
-const register = useCallback(async (name, email, phone, password) => {
-  try {
-    setLoading(true);
-    setError(null);
-    const response = await endpoints.auth.register({ name, email, phone, password });
-    
-    localStorage.setItem("token", response.token);
-    localStorage.setItem("user", JSON.stringify(response.user));
-    setIsAuthenticated(true);
-    setUser(response.user);
-    
-    navigate("/"); 
-    
-    return { success: true };
-  } catch (err) {
-    console.log(err);
-  } finally {
-    setLoading(false);
-  }
-}, [navigate, setUser]);
 
   const logout = useCallback(async () => {
     try {
