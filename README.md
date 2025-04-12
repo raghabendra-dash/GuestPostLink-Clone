@@ -3,7 +3,7 @@
 A MERN stack-powered **GuestPost Marketplace** where users can browse SEO tools, buy guest post services and admins can manage orders and payment status and gain insights from a Data Analytics Dashboard — showing total traffic, revenue, conversion rates, active orders and recent notifications — all in one place.
 
  
-![Screenshot](https://user-images.githubusercontent.com/12345678/your-uploaded-screenshot.png)
+![Screenshot](https://github.com/raghabendra-dash/GuestPostLink-Clone/blob/83cf1fb4fe920a970038d027ed12a2f6eb9b5c53/ScreenShot.png)
 <!--![GuestPost Preview](preview.png)--> 
 
 ## Live Demo
