@@ -1,4 +1,4 @@
-<h2>GuestPostLink App</h2>
+<h2>GuestPost - Link Publishing App</h2>
 
 A MERN stack-powered **GuestPost Marketplace** where users can browse SEO tools, buy guest post services and admins can manage orders and payment status and gain insights from a Data Analytics Dashboard — showing total traffic, revenue, conversion rates, active orders and recent notifications — all in one place.
 
