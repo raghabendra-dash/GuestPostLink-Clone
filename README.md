@@ -14,7 +14,11 @@ A MERN stack-powered **GuestPost Marketplace** where users can browse SEO tools,
 
 <h3>Marketplace:</h3>
 
-![Marketplace](https://github.com/raghabendra-dash/GuestPostLink-Clone/blob/62a246b4735e9f88642eb35237217897c6f12339/ScreenShot-2.png) 
+![Marketplace](https://github.com/raghabendra-dash/GuestPostLink-Clone/blob/62a246b4735e9f88642eb35237217897c6f12339/ScreenShot-2.png)
+
+<h3>Payment Option:</h3>
+
+![Payment Option](https://github.com/raghabendra-dash/GuestPostLink-Clone/blob/3361ecdf25f44214dff67f62f76837fbbb20d212/Screenshot%20(2).png)
 
 ## Features
 
